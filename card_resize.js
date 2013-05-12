@@ -35,10 +35,10 @@ function cardResize(){
         var style=document.createElement('style');
         style.setAttribute('type','text/css');
         style.appendChild(document.createTextNode(cssToInsert));
-        var old_style = head.getElementsByTagName('style')[0];
-        if(old_style){
-            head.replaceChild(style, old_style);
-        }else{ 
+        var old_style = head.getElementsByTagName('style');
+        if(old_style.length > 0){
+            head.replaceChild(style, old_style[0]);
+        }else{
             head.appendChild(style);
         }
     }
