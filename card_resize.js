@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name           Trello : Large Cards
-// @author         Aaron Bond
-// @version        1
+// @name           Trello : Large Cards 2
+// @author         konjoot
+// @version        1.0
 // @include        https://trello.com/*
 // @include        http://trello.com/*
 // Modified script from http://blog.justin.kelly.org.au/trello-big-edit/ (Original credit goes to him!)
@@ -11,11 +11,9 @@ function cardResize(){
     var screen_width = $('body').innerWidth();
     var window_wrapper_width = screen_width - screen_width/10;
     var window_main_col_width = window_wrapper_width - 220;
-   // $('.window').css('left', (screen_width/20).toString() + 'px');
-   // $('.window').css('width', window_wrapper_width.toString() + 'px');
-   // $('.window-main-col').css('width', window_main_col_width.toString() + 'px');
-    cssString = ' '+
-        '.window{ '+
+
+   cssString = ' '+
+        '.window:not(.slim):not(.archive){ '+
         '   left:' + (screen_width/20).toString() + 'px !important; ' +
         '   top:50px !important; ' +
         '   width:' + window_wrapper_width.toString() + 'px !important; '+
