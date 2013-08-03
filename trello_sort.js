@@ -1,13 +1,31 @@
 // ==UserScript==
 // @name			Trello : Sorted cards
 // @author			konjoot
-// @version			0.1
-// @include			/^https:\/\/trello.com\/\w+\/cards$/i
-// @include			/^http:\/\/trello.com\/\w+\/cards$/i
+// @version			0.2
+// @include			https://trello.com/*/cards
+// @include			http://trello.com/*/cards
 // @grant				none
 // ==/UserScript==
 
-function initSort(){
+function addJavascript(jsname,pos) {
+	var th = document.getElementsByTagName(pos)[0];
+	var s = document.createElement('script');
+	s.setAttribute('type','text/javascript');
+	s.setAttribute('src',jsname);
+	th.appendChild(s);
+}
+
+
+// var glob = this;
+
+// function resetTimer(timer){
+// 	if(timer){
+// 		clearTimeout(timer);
+// 	};
+// 	timer=setTimeout(glob.sortCards,1000);
+// }
+
+function sortCards(){
 	cssString = '\
 	.red{\
 		background: none repeat scroll 0 0 rgba(244, 78, 78, 0.2);\
@@ -121,10 +139,37 @@ function initSort(){
 	}
 }
 
-function initR(){
- $('ul.pop-over-list.checkable').on('click','a', function(e){e.stopPropagation(); alert('dfdfd');});
-}
-$('.window-module.gutter').on('click', 'a', function(){setTimeout(initR, 1);});
+$(document).on('ready', function(){
+	setTimeout(function(){
+		addJavascript('https://mutation-summary.googlecode.com/git/mutation_summary.js', 'head');
+		setTimeout(function(){
+			var observer = new MutationSummary({
+				callback: sortCards,
+				queries: [{
+					element: '.window-module'
+				}]
+			});}, 1);
+	}, 1);
+});
 
-$('.pop-over-list.checkable').on('click', 'li', function(){setTimeout(initSort, 1000);});
-$(document).on('ready', function(){setTimeout(initSort, 2000);});
+// function cardsUpdate(summaries){
+// 	var timer = setTimeout(glob.sortCards, 1000);
+// 	summaries[0].added.forEach(resetTimer(timer));
+// }
+
+// function initR(){
+//  $('ul.pop-over-list.checkable').on('click','a', function(e){e.stopPropagation(); alert('dfdfd');});
+// }
+// $('.window-module.gutter').on('click', 'a', function(){setTimeout(initR, 1);});
+
+// $('.pop-over-list.checkable').on('click', 'li', function(){setTimeout(initSort, 1000);});
+
+// function getAlert(){
+// 	alert('it\'s alive');
+// 	var observer = new MutationSummary({
+// 		callback: cardsCheck,
+// 		queries: [{element: '.window-module'}
+// 	]});
+// }
+
+
