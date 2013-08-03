@@ -7,12 +7,19 @@
 // @grant				none
 // ==/UserScript==
 
-function addJavascript(jsname,pos) {
-	var th = document.getElementsByTagName(pos)[0];
-	var s = document.createElement('script');
-	s.setAttribute('type','text/javascript');
-	s.setAttribute('src',jsname);
-	th.appendChild(s);
+// function addJavascript(jsname,pos) {
+// 	var th = document.getElementsByTagName(pos)[0];
+// 	var s = document.createElement('script');
+// 	s.setAttribute('type','text/javascript');
+// 	s.setAttribute('src',jsname);
+// 	th.appendChild(s);
+// }
+
+function addJavascript(pos, funct) {
+	$.get( "https://rawgithub.com/konjoot/TrelloBookmarklet/master/libs/mutation_summary.js", function( data, callback ) {
+		$(pos).append('<script type="text/javascript">' + data + '</script>');
+		funct();
+	});
 }
 
 
@@ -139,18 +146,17 @@ function sortCards(){
 	}
 }
 
-$(document).on('ready', function(){
-	setTimeout(function(){
-		addJavascript('https://mutation-summary.googlecode.com/git/mutation_summary.js', 'head');
-		setTimeout(function(){
-			var observer = new MutationSummary({
-				callback: sortCards,
-				queries: [{
-					element: '.window-module'
-				}]
-			});}, 1);
-	}, 1);
-});
+function initSort(){
+	var observer = new MutationSummary({
+		callback: sortCards,
+		queries: [{
+			element: '.window-module'
+		}]
+	});
+}
+
+$(sortCards);
+addJavascript('head', initSort);
 
 // function cardsUpdate(summaries){
 // 	var timer = setTimeout(glob.sortCards, 1000);
