@@ -7,56 +7,39 @@
 // @grant				none
 // ==/UserScript==
 
-// function addJavascript(jsname,pos) {
-// 	var th = document.getElementsByTagName(pos)[0];
-// 	var s = document.createElement('script');
-// 	s.setAttribute('type','text/javascript');
-// 	s.setAttribute('src',jsname);
-// 	th.appendChild(s);
-// }
+var TAG_NAME = 'sorted-cards-0.2-css'
+var CSS_STRING = '\
+.red{\
+	background: none repeat scroll 0 0 rgba(244, 78, 78, 0.2);\
+	float: left;\
+	margin-bottom: 10px;\
+	padding: 10px 0 0 10px;\
+	width: 99%;\
+}\
+.purple{\
+	background: none repeat scroll 0 0 rgba(153, 51, 204, 0.1);\
+	float: left;\
+	margin-bottom: 10px;\
+	padding: 10px 0 0 10px;\
+	width: 99%;\
+}\
+.other{\
+	background: none repeat scroll 0 0 rgba(82, 121, 214, 0.2);\
+	float: left;\
+	margin-bottom: 10px;\
+	padding: 10px 0 0 10px;\
+	width: 99%;\
+}';
 
 function addJavascript(pos, funct) {
-	$.get( "https://rawgithub.com/konjoot/TrelloBookmarklet/master/libs/mutation_summary.js", function( data, callback ) {
+	$.get( "https://rawgithub.com/konjoot/TrelloBookmarklet/master/libs/mutation_summary_min.js", function( data, callback ) {
 		$(pos).append('<script type="text/javascript">' + data + '</script>');
 		funct();
 	});
 }
 
 
-// var glob = this;
-
-// function resetTimer(timer){
-// 	if(timer){
-// 		clearTimeout(timer);
-// 	};
-// 	timer=setTimeout(glob.sortCards,1000);
-// }
-
 function sortCards(){
-	cssString = '\
-	.red{\
-		background: none repeat scroll 0 0 rgba(244, 78, 78, 0.2);\
-		float: left;\
-		margin-bottom: 10px;\
-		padding: 10px 0 0 10px;\
-		width: 99%;\
-	}\
-	.purple{\
-		background: none repeat scroll 0 0 rgba(153, 51, 204, 0.1);\
-		float: left;\
-		margin-bottom: 10px;\
-		padding: 10px 0 0 10px;\
-		width: 99%;\
-	}\
-	.other{\
-		background: none repeat scroll 0 0 rgba(82, 121, 214, 0.2);\
-		float: left;\
-		margin-bottom: 10px;\
-		padding: 10px 0 0 10px;\
-		width: 99%;\
-	}';
-	
-	insertCSS(cssString);
 
 	var cards = {};
 	cards.red = {orange: [], yellow: [], blue: [], other: [], green: []};
@@ -129,20 +112,21 @@ function sortCards(){
 			}
 		});
 	});
+}
 
-	function insertCSS(cssToInsert) {
-		var head=document.getElementsByTagName('head')[0];
-		if(!head)
-				return;
-		var style=document.createElement('style');
-		style.setAttribute('type','text/css');
-		style.appendChild(document.createTextNode(cssToInsert));
-		var old_style = head.getElementsByTagName('style');
-		if(old_style.length > 0){
-				head.replaceChild(style, old_style[0]);
-		}else{
-				head.appendChild(style);
-		}
+function insertCSS(cssToInsert) {
+	var head=document.getElementsByTagName('head')[0];
+	if(!head)
+			return;
+	var style=document.createElement('style');
+	style.setAttribute('type', 'text/css');
+	style.setAttribute('id', TAG_NAME);
+	style.appendChild(document.createTextNode(cssToInsert));
+	var old_style = document.getElementById(TAG_NAME);
+	if(old_style){
+			head.replaceChild(style, old_style);
+	}else{
+			head.appendChild(style);
 	}
 }
 
@@ -155,27 +139,6 @@ function initSort(){
 	});
 }
 
+$(insertCSS(CSS_STRING));
 $(sortCards);
 addJavascript('head', initSort);
-
-// function cardsUpdate(summaries){
-// 	var timer = setTimeout(glob.sortCards, 1000);
-// 	summaries[0].added.forEach(resetTimer(timer));
-// }
-
-// function initR(){
-//  $('ul.pop-over-list.checkable').on('click','a', function(e){e.stopPropagation(); alert('dfdfd');});
-// }
-// $('.window-module.gutter').on('click', 'a', function(){setTimeout(initR, 1);});
-
-// $('.pop-over-list.checkable').on('click', 'li', function(){setTimeout(initSort, 1000);});
-
-// function getAlert(){
-// 	alert('it\'s alive');
-// 	var observer = new MutationSummary({
-// 		callback: cardsCheck,
-// 		queries: [{element: '.window-module'}
-// 	]});
-// }
-
-
