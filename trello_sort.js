@@ -8,6 +8,13 @@
 // ==/UserScript==
 
 var TAG_NAME = 'sorted-cards-0.2-css'
+
+//Allowed labels: red, purple, orange, yellow, blue, green, other(for cards without any label)
+
+var BODY_LABELS = {orange: [], yellow: [], blue: [], other: [], green: []}; //order in which cards will be sorted inside HEAD_LABELS blocks
+
+var HEAD_LABELS = {red: BODY_LABELS, purple: BODY_LABELS, other: BODY_LABELS}; //for these json you must define css styles (class names in CSS must be same as keys in this json), like that:
+
 var CSS_STRING = '\
 .red{\
 	background: none repeat scroll 0 0 rgba(244, 78, 78, 0.2);\
@@ -31,6 +38,7 @@ var CSS_STRING = '\
 	width: 99%;\
 }';
 
+
 function addJavascript(pos, funct) {
 	$.get( "https://rawgithub.com/konjoot/TrelloBookmarklet/master/libs/mutation_summary_min.js", function( data, callback ) {
 		$(pos).append('<script type="text/javascript">' + data + '</script>');
@@ -38,18 +46,27 @@ function addJavascript(pos, funct) {
 	});
 }
 
-
-function sortCards(){
-
-	var cards = {};
-	cards.red = {orange: [], yellow: [], blue: [], other: [], green: []};
-	cards.purple = {orange: [], yellow: [], blue: [], other: [], green: []};
-	cards.other = {orange: [], yellow: [], blue: [], other: [], green: []};
+function sortCards(cards){
 
 	$('.js-cards-content div.float-cards').each(function(){
 		var container = $(this);
 		container.find('div.list-card-container').each(function(){
 			var card = $(this)
+			$.each(cards, function(key, val){
+				if(card.find('span.' + key + '-label').length > 0){
+					if(card.find('span.orange-label').length > 0){
+						cards.red.orange.push(card.detach());
+					}else if(card.find('span.yellow-label').length > 0){
+						cards.red.yellow.push(card.detach());
+					}else if(card.find('span.blue-label').length > 0){
+						cards.red.blue.push(card.detach());
+					}else if(card.find('span.green-label').length > 0){
+						cards.red.green.push(card.detach());
+					}else{
+						cards.red.other.push(card.detach());
+					}
+				}
+			});
 			if(card.find('span.red-label').length > 0){
 				if(card.find('span.orange-label').length > 0){
 					cards.red.orange.push(card.detach());
@@ -132,7 +149,7 @@ function insertCSS(cssToInsert) {
 
 function initSort(){
 	var observer = new MutationSummary({
-		callback: sortCards,
+		callback: sortCards(HEAD_LABELS),
 		queries: [{
 			element: '.window-module'
 		}]
@@ -140,5 +157,5 @@ function initSort(){
 }
 
 $(insertCSS(CSS_STRING));
-$(sortCards);
+$(sortCards(HEAD_LABELS));
 addJavascript('head', initSort);
