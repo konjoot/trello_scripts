@@ -11,9 +11,18 @@ var TAG_NAME = 'sorted-cards-0.2-css'
 
 //Allowed labels: red, purple, orange, yellow, blue, green, other(for cards without any label)
 
-var BODY_LABELS = {orange: [], yellow: [], blue: [], other: [], green: []}; //order in which cards will be sorted inside HEAD_LABELS blocks
+//for these json you must define css styles (class names in CSS must be same as keys in this json), like that:
+var cards_tree = {
+	red: {orange: [], yellow: [], blue: [], other: [], green: []}, 
+	purple: {orange: [], yellow: [], blue: [], other: [], green: []}, 
+	other: {orange: [], yellow: [], blue: [], other: [], green: []}
+};
 
-var HEAD_LABELS = {red: BODY_LABELS, purple: BODY_LABELS, other: BODY_LABELS}; //for these json you must define css styles (class names in CSS must be same as keys in this json), like that:
+var cards_containers = {
+	red: $('<div class="red"></div>'),
+	purple: $('<div class="purple"></div>'),
+	other: $('<div class="other"></div>')
+};
 
 var CSS_STRING = '\
 .red{\
@@ -46,86 +55,40 @@ function addJavascript(pos, funct) {
 	});
 }
 
-function sortCards(cards){
+function sortCards(cards_tree, cards_containers){
+	
 
 	$('.js-cards-content div.float-cards').each(function(){
 		var container = $(this);
-		container.find('div.list-card-container').each(function(){
-			var card = $(this)
-			$.each(cards, function(key, val){
-				if(card.find('span.' + key + '-label').length > 0){
-					if(card.find('span.orange-label').length > 0){
-						cards.red.orange.push(card.detach());
-					}else if(card.find('span.yellow-label').length > 0){
-						cards.red.yellow.push(card.detach());
-					}else if(card.find('span.blue-label').length > 0){
-						cards.red.blue.push(card.detach());
-					}else if(card.find('span.green-label').length > 0){
-						cards.red.green.push(card.detach());
+		$.each(cards_tree, function(key, val){
+			$.each(val, function(k, v){
+				if(key == 'other'){
+					if(k == 'other'){
+						v.push($(container).find('div.list-card-container').detach());
 					}else{
-						cards.red.other.push(card.detach());
+						v.push($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
+					}
+				}else{
+					if(k == 'other'){
+						v.push($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
+					}else{
+						v.push($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
 					}
 				}
 			});
-			if(card.find('span.red-label').length > 0){
-				if(card.find('span.orange-label').length > 0){
-					cards.red.orange.push(card.detach());
-				}else if(card.find('span.yellow-label').length > 0){
-					cards.red.yellow.push(card.detach());
-				}else if(card.find('span.blue-label').length > 0){
-					cards.red.blue.push(card.detach());
-				}else if(card.find('span.green-label').length > 0){
-					cards.red.green.push(card.detach());
-				}else{
-					cards.red.other.push(card.detach());
+		});
+
+		$.each(cards_tree, function(key, val){
+			$.each(val, function(k, v){
+				while(v.length > 0){
+					$(v.shift()).appendTo($(cards_containers[key]));
 				}
-			}else if(card.find('span.purple-label').length > 0){
-				if(card.find('span.orange-label').length > 0){
-					cards.purple.orange.push(card.detach());
-				}else if(card.find('span.yellow-label').length > 0){
-					cards.purple.yellow.push(card.detach());
-				}else if(card.find('span.blue-label').length > 0){
-					cards.purple.blue.push(card.detach());
-				}else if(card.find('span.green-label').length > 0){
-					cards.purple.green.push(card.detach());
-				}else{
-					cards.purple.other.push(card.detach());
-				}
-			}else{
-				if(card.find('span.orange-label').length > 0){
-					cards.other.orange.push(card.detach());
-				}else if(card.find('span.yellow-label').length > 0){
-					cards.other.yellow.push(card.detach());
-				}else if(card.find('span.blue-label').length > 0){
-					cards.other.blue.push(card.detach());
-				}else if(card.find('span.green-label').length > 0){
-					cards.other.green.push(card.detach());
-				}else{
-					cards.other.other.push(card.detach());
-				}
-			}
+			});
 		});
-		var red = $('<div class="red"></div>');
-		var purple = $('<div class="purple"></div>');
-		var other = $('<div class="other"></div>');
-		$.each(cards.red, function(){
-			while(this.length > 0){
-				$(this.shift()).appendTo($(red));
-			}
-		});
-		$.each(cards.purple, function(){
-			while(this.length > 0){
-				$(this.shift()).appendTo($(purple));
-			}
-		});
-		$.each(cards.other, function(){
-			while(this.length > 0){
-				$(this.shift()).appendTo($(other));
-			}
-		});
-		$.each([red, purple, other], function(){
-			if(this.find('div.list-card-container').length > 0){
-				container.append(this);
+		console.log(cards_containers);
+		$.each(cards_containers, function(key, val){
+			if($(val).find('div.list-card-container').length > 0){
+				$(container).append($(val));
 			}
 		});
 	});
@@ -157,5 +120,5 @@ function initSort(){
 }
 
 $(insertCSS(CSS_STRING));
-$(sortCards(HEAD_LABELS));
+$(sortCards(cards_tree, cards_containers));
 addJavascript('head', initSort);
