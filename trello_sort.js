@@ -56,38 +56,55 @@ function addJavascript(pos, funct) {
 }
 
 function sortCards(cards_tree, cards_containers){
-	
+	cards_tree_copy = cards_tree;	
 
 	$('.js-cards-content div.float-cards').each(function(){
 		var container = $(this);
-		$.each(cards_tree, function(key, val){
+		console.log(container);
+		$.each(cards_tree_copy, function(key, val){
 			$.each(val, function(k, v){
+				console.log('key=' + key);
+				console.log('k=' + k);
 				if(key == 'other'){
 					if(k == 'other'){
-						v.push($(container).find('div.list-card-container').detach());
+						console.log($(container).find('div.list-card-container').detach());
+						// v.push($(container).find('div.list-card-container').detach());
+						// console.log(v);
 					}else{
-						v.push($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
+						console.log($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
+						// v.push($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
+						// console.log(v);
 					}
 				}else{
 					if(k == 'other'){
-						v.push($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
+						console.log($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
+						// v.push($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
+						// console.log(v);
 					}else{
-						v.push($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
+						console.log($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
+						// v.push($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
+						// console.log(v);
 					}
 				}
 			});
 		});
 
-		$.each(cards_tree, function(key, val){
+		// console.log(cards_tree_copy);
+		$.each(cards_tree_copy, function(key, val){
 			$.each(val, function(k, v){
 				while(v.length > 0){
 					$(v.shift()).appendTo($(cards_containers[key]));
 				}
 			});
 		});
-		console.log(cards_containers);
+
+		// console.log('cards_containers');
+		// console.log(cards_containers);
+
 		$.each(cards_containers, function(key, val){
 			if($(val).find('div.list-card-container').length > 0){
+				// console.log($(container));
+				// console.log(val);
 				$(container).append($(val));
 			}
 		});
@@ -112,7 +129,7 @@ function insertCSS(cssToInsert) {
 
 function initSort(){
 	var observer = new MutationSummary({
-		callback: sortCards(HEAD_LABELS),
+		callback: sortCards(cards_tree, cards_containers),
 		queries: [{
 			element: '.window-module'
 		}]
@@ -121,4 +138,4 @@ function initSort(){
 
 $(insertCSS(CSS_STRING));
 $(sortCards(cards_tree, cards_containers));
-addJavascript('head', initSort);
+// addJavascript('head', initSort);
