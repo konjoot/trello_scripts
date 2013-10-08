@@ -13,9 +13,9 @@ var TAG_NAME = 'sorted-cards-0.2-css'
 
 //for these json you must define css styles (class names in CSS must be same as keys in this json), like that:
 var cards_tree = {
-	red: {orange: [], yellow: [], blue: [], other: [], green: []}, 
-	purple: {orange: [], yellow: [], blue: [], other: [], green: []}, 
-	other: {orange: [], yellow: [], blue: [], other: [], green: []}
+	red: {orange: [], yellow: [], blue: [], green: [], other: []}, 
+	purple: {orange: [], yellow: [], blue: [], green: [], other: []}, 
+	other: {orange: [], yellow: [], blue: [], green: [], other: []}
 };
 
 var cards_containers = {
@@ -56,52 +56,57 @@ function addJavascript(pos, funct) {
 }
 
 function sortCards(cards_tree, cards_containers){
-	cards_tree_copy = cards_tree;	
+	var cards_tree_copy = JSON.parse(JSON.stringify(cards_tree));
+	var cards_containers_copy = JSON.parse(JSON.stringify(cards_containers));
 
 	$('.js-cards-content div.float-cards').each(function(){
 		var container = $(this);
-		console.log(container);
+		console.log("\n");
+		console.log(container.prev().find('h3').text());
 		$.each(cards_tree_copy, function(key, val){
 			$.each(val, function(k, v){
-				console.log('key=' + key);
-				console.log('k=' + k);
+				// console.log('key=' + key);
+				// console.log('k=' + k);
 				if(key == 'other'){
 					if(k == 'other'){
-						console.log($(container).find('div.list-card-container').detach());
-						// v.push($(container).find('div.list-card-container').detach());
+						// console.log($(container).find('div.list-card-container').detach());
+						v.push($(container).find('div.list-card-container').detach());
 						// console.log(v);
 					}else{
-						console.log($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
-						// v.push($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
+						// console.log($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
+						v.push($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
 						// console.log(v);
 					}
 				}else{
 					if(k == 'other'){
-						console.log($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
-						// v.push($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
+						// console.log($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
+						v.push($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
 						// console.log(v);
 					}else{
-						console.log($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
-						// v.push($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
+						// console.log($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
+						v.push($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
 						// console.log(v);
 					}
 				}
 			});
 		});
-
+		console.log(cards_tree_copy);
 		// console.log(cards_tree_copy);
 		$.each(cards_tree_copy, function(key, val){
+			console.log(key);
+			console.log(val.length());
 			$.each(val, function(k, v){
+				// console.log(v);
 				while(v.length > 0){
-					$(v.shift()).appendTo($(cards_containers[key]));
+					$(v.shift()).appendTo($(cards_containers_copy[key]));
 				}
 			});
 		});
 
-		// console.log('cards_containers');
-		// console.log(cards_containers);
+		console.log('cards_containers');
+		console.log(cards_containers);
 
-		$.each(cards_containers, function(key, val){
+		$.each(cards_containers_copy, function(key, val){
 			if($(val).find('div.list-card-container').length > 0){
 				// console.log($(container));
 				// console.log(val);
