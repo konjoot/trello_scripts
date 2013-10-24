@@ -56,8 +56,11 @@ function addJavascript(pos, funct) {
 }
 
 function sortCards(cards_tree, cards_containers){
-	var cards_tree_copy = JSON.parse(JSON.stringify(cards_tree));
-	var cards_containers_copy = JSON.parse(JSON.stringify(cards_containers));
+	var cards_tree_copy = jQuery.extend(true, {}, cards_tree);
+	var cards_containers_copy = jQuery.extend(true, {}, cards_containers);
+
+	console.log(cards_tree_copy);
+	console.log(cards_tree);
 
 	$('.js-cards-content div.float-cards').each(function(){
 		var container = $(this);
@@ -94,12 +97,19 @@ function sortCards(cards_tree, cards_containers){
 		// console.log(cards_tree_copy);
 		$.each(cards_tree_copy, function(key, val){
 			console.log(key);
-			console.log(val.length());
+			console.log(val);
 			$.each(val, function(k, v){
-				// console.log(v);
-				while(v.length > 0){
-					$(v.shift()).appendTo($(cards_containers_copy[key]));
-				}
+				// console.log(v[0].length);
+				// while(v[0].length > 1){
+					v[0].each(function(){
+						console.log(this);
+						console.log(cards_containers_copy);
+						$(this).appendTo($(cards_containers_copy[key]));
+						// $(this).remove();
+						console.log('end');
+					});
+				// 	// $(v.shift()).appendTo($(cards_containers_copy[key]));
+				// }
 			});
 		});
 
@@ -110,9 +120,12 @@ function sortCards(cards_tree, cards_containers){
 			if($(val).find('div.list-card-container').length > 0){
 				// console.log($(container));
 				// console.log(val);
-				$(container).append($(val));
+				$(val).appendTo($(container));
 			}
 		});
+
+		cards_tree_copy = jQuery.extend(true, {}, cards_tree);
+		cards_containers_copy = jQuery.extend(true, {}, cards_containers);
 	});
 }
 
@@ -142,5 +155,5 @@ function initSort(){
 }
 
 $(insertCSS(CSS_STRING));
-$(sortCards(cards_tree, cards_containers));
+$(sortCards(jQuery.extend(true, {}, cards_tree), jQuery.extend(true, {}, cards_containers)));
 // addJavascript('head', initSort);
