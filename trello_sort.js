@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name			Trello : Sorted cards
 // @author			konjoot
-// @version			0.2
+// @version			0.5
 // @include			https://trello.com/*/cards
 // @include			http://trello.com/*/cards
 // @grant				none
 // ==/UserScript==
 
-var TAG_NAME = 'sorted-cards-0.2-css'
+var TAG_NAME = 'sorted-cards-0.5-css'
 
 //Allowed labels: red, purple, orange, yellow, blue, green, other(for cards without any label)
 
@@ -19,9 +19,9 @@ var cards_tree = {
 };
 
 var cards_containers = {
-	red: $('<div class="red"></div>'),
-	purple: $('<div class="purple"></div>'),
-	other: $('<div class="other"></div>')
+	red: [],
+	purple: [],
+	other: []
 };
 
 var CSS_STRING = '\
@@ -56,76 +56,48 @@ function addJavascript(pos, funct) {
 }
 
 function sortCards(cards_tree, cards_containers){
-	var cards_tree_copy = jQuery.extend(true, {}, cards_tree);
-	var cards_containers_copy = jQuery.extend(true, {}, cards_containers);
-
-	console.log(cards_tree_copy);
-	console.log(cards_tree);
 
 	$('.js-cards-content div.float-cards').each(function(){
+		var cards_tree_copy = JSON.parse(JSON.stringify(cards_tree));
+		var cards_containers_copy = JSON.parse(JSON.stringify(cards_containers));
 		var container = $(this);
-		console.log("\n");
-		console.log(container.prev().find('h3').text());
+
 		$.each(cards_tree_copy, function(key, val){
 			$.each(val, function(k, v){
-				// console.log('key=' + key);
-				// console.log('k=' + k);
 				if(key == 'other'){
 					if(k == 'other'){
-						// console.log($(container).find('div.list-card-container').detach());
 						v.push($(container).find('div.list-card-container').detach());
-						// console.log(v);
 					}else{
-						// console.log($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
 						v.push($(container).find('.' + k + '-label').parents('div.list-card-container').detach());
-						// console.log(v);
 					}
 				}else{
 					if(k == 'other'){
-						// console.log($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
 						v.push($(container).find('.' + key + '-label').parents('div.list-card-container').detach());
-						// console.log(v);
 					}else{
-						// console.log($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
 						v.push($(container).find('.' + key + '-label').parents('div.js-card-labels').find('.' + k + '-label').parents('div.list-card-container').detach());
-						// console.log(v);
 					}
 				}
 			});
 		});
-		console.log(cards_tree_copy);
-		// console.log(cards_tree_copy);
+
 		$.each(cards_tree_copy, function(key, val){
-			console.log(key);
-			console.log(val);
 			$.each(val, function(k, v){
-				// console.log(v[0].length);
-				// while(v[0].length > 1){
-					v[0].each(function(){
-						console.log(this);
-						console.log(cards_containers_copy);
-						$(this).appendTo($(cards_containers_copy[key]));
-						// $(this).remove();
-						console.log('end');
-					});
-				// 	// $(v.shift()).appendTo($(cards_containers_copy[key]));
-				// }
+				v[0].each(function(){
+					cards_containers_copy[key].push($(this));
+				});
 			});
 		});
 
-		console.log('cards_containers');
-		console.log(cards_containers);
-
 		$.each(cards_containers_copy, function(key, val){
-			if($(val).find('div.list-card-container').length > 0){
-				// console.log($(container));
-				// console.log(val);
-				$(val).appendTo($(container));
+			if($(val).length > 0){
+				if($(container).find('.' + key).length < 1){
+					$('<div class="' + key + '"></div>').appendTo($(container));
+				}
+				$.each(val, function(){
+					$(container).find('div.' + key).append($(this));
+				});
 			}
 		});
-
-		cards_tree_copy = jQuery.extend(true, {}, cards_tree);
-		cards_containers_copy = jQuery.extend(true, {}, cards_containers);
 	});
 }
 
@@ -147,7 +119,7 @@ function insertCSS(cssToInsert) {
 
 function initSort(){
 	var observer = new MutationSummary({
-		callback: sortCards(cards_tree, cards_containers),
+		callback: function(){sortCards(cards_tree, cards_containers);},
 		queries: [{
 			element: '.window-module'
 		}]
@@ -155,5 +127,5 @@ function initSort(){
 }
 
 $(insertCSS(CSS_STRING));
-$(sortCards(jQuery.extend(true, {}, cards_tree), jQuery.extend(true, {}, cards_containers)));
-// addJavascript('head', initSort);
+$(sortCards(cards_tree, cards_containers));
+addJavascript('head', initSort);
