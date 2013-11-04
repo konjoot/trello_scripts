@@ -49,7 +49,7 @@ var CSS_STRING = '\
 
 
 function addJavascript(pos, funct) {
-	$.get( "https://rawgithub.com/konjoot/TrelloBookmarklet/master/libs/mutation_summary_min.js", function( data, callback ) {
+	$.get( "https://rawgithub.com/konjoot/trello_scripts/master/libs/mutation_summary_min.js", function( data, callback ) {
 		$(pos).append('<script type="text/javascript">' + data + '</script>');
 		funct();
 	});
