@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name			Trello : Sorted cards
 // @author			konjoot
-// @version			0.5
+// @version			0.5.1
 // @include			https://trello.com/*/cards
 // @include			http://trello.com/*/cards
 // @grant				none
