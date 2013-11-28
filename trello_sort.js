@@ -2,8 +2,8 @@
 // @name			Trello : Sorted cards
 // @author			konjoot
 // @version			0.5.1
-// @include			https://trello.com/*/cards
-// @include			http://trello.com/*/cards
+// @include			https://trello.com/*
+// @include			http://trello.com/*
 // @grant				none
 // ==/UserScript==
 
