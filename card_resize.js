@@ -15,7 +15,7 @@ function cardResize(){
 
 	cssString = ' '+
 		'.window:not(.slim):not(.archive){ '+
-		'	 left:' + (screen_width/20).toString() + 'px !important; ' +
+		'	 left:' + (screen_width/60).toString() + 'px !important; ' +
 		'	 top:50px !important; ' +
 		'	 width:' + window_wrapper_width.toString() + 'px !important; '+
 		'} '+
@@ -24,7 +24,7 @@ function cardResize(){
 		'{ '+
 		'	 width:' + window_main_col_width.toString() + 'px !important; '+
 		'} ';
-	
+
 	insertCSS(cssString);
 	// Function to insert CSS
 	function insertCSS(cssToInsert) {
