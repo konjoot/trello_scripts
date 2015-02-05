@@ -20,9 +20,9 @@ function cardResize(){
 		'	 width:' + window_wrapper_width.toString() + 'px !important; '+
 		'} '+
 		' '+
-		'.window div.window-wrapper.clearfix div.clearfix div.window-main-col'+
+		'.window .card-detail-window.u-clearfix div.window-main-col.u-clearfix'+
 		'{ '+
-		'	 width:' + window_main_col_width.toString() + 'px !important; '+
+		'	 width: 85% !important;' +
 		'} ';
 
 	insertCSS(cssString);
