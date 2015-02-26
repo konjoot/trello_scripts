@@ -22,7 +22,7 @@ function cardResize(){
 		' '+
 		'.window .card-detail-window.u-clearfix div.window-main-col.u-clearfix'+
 		'{ '+
-		'	 width: 85% !important;' +
+		'	 width: 84% !important;' +
 		'} ';
 
 	insertCSS(cssString);
