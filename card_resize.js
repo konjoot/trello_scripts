@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name					 Trello : Large Cards 2
-// @author				 konjoot
+// @name				Trello : Large Cards 2
+// @author				konjoot
 // @version				1.0
 // @include				https://trello.com/*
 // @include				http://trello.com/*
 // Modified script from http://blog.justin.kelly.org.au/trello-big-edit/ (Original credit goes to him!)
-// @grant			 none
+// @grant				none
 // ==/UserScript==
 function cardResize(){
   var TAG_NAME = 'large-cards-1.0-css'
